@@ -1,13 +1,13 @@
-import { NavigationSection } from "./sections/Navigation.section";
 import { QuickLaunch } from "./sections/dashboard/QuickLaunch.widget";
 import { MyActions } from "./sections/dashboard/MyActions.widget";
-import type { Page, Locator } from "@playwright/test";
-import type {
-  WebPageInterface,
-  WebPageStaticInterface,
-} from "./interfaces/WebPageInterfaces";
+import { AbsWebPage } from "./AbsWebPage";
+import type { Page } from "@playwright/test";
+import type { WebPageStaticInterface } from "./interfaces/WebPageInterfaces";
+import type AbsWidget from "./sections/dashboard/AbsWidget";
 
-type WidgetsMap = Readonly<{
+type WidgetsOf<T extends Record<string, AbsWidget>> = Readonly<T>;
+
+type WidgetsMap = WidgetsOf<{
   quickLaunch: QuickLaunch;
   myActions: MyActions;
 }>;
@@ -16,11 +16,8 @@ type WidgetConstructors = {
   readonly [K in keyof WidgetsMap]: new (page: Page) => WidgetsMap[K];
 };
 
-export class DashboardPage implements WebPageInterface {
-  private readonly page: Page;
-  readonly navigation: NavigationSection;
+export class DashboardPage extends AbsWebPage {
   readonly widgets: WidgetsMap;
-  readonly pageHeader: Locator;
 
   static readonly PAGE_PATH = "/web/index.php/dashboard/index";
   static readonly ROUTES = {
@@ -46,13 +43,15 @@ export class DashboardPage implements WebPageInterface {
   }
 
   private constructor(page: Page) {
-    this.page = page;
-    this.navigation = new NavigationSection(page);
-    this.pageHeader = this.page.getByRole("heading", { name: "Dashboard" });
+    super(page);
     this.widgets = this.getWidgets();
   }
 
   private getWidgets(): WidgetsMap {
+    /**
+     * Why proxy instead of just an object with classes?
+     * Just wanted to play around with Proxy. Never used them before.
+     */
     const page = this.page;
     const widgets: WidgetConstructors = {
       quickLaunch: QuickLaunch,

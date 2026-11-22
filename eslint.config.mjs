@@ -1,6 +1,22 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
+const privateConstructorMessage =
+  "This class must have a private constructor. Expose a static factory (.visit() & .getPage()) instead.";
+
+const privateConstructorRules = [
+  {
+    selector:
+      "ClassDeclaration > ClassBody > MethodDefinition[kind='constructor']:not([accessibility='private'])",
+    message: privateConstructorMessage,
+  },
+  {
+    selector:
+      "ClassDeclaration:not(:has(MethodDefinition[kind='constructor']))",
+    message: privateConstructorMessage,
+  },
+];
+
 export default defineConfig(
   globalIgnores(["node_modules/**", "playwright-report/**", "test-results/**"]),
   {
@@ -22,6 +38,13 @@ export default defineConfig(
           ],
         },
       ],
+    },
+  },
+  {
+    files: ["pages/**/*.page.ts"],
+    ignores: ["**/*.spec.ts", "**/*.test.ts"],
+    rules: {
+      "no-restricted-syntax": ["error", ...privateConstructorRules],
     },
   },
 );

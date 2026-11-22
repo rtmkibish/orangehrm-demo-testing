@@ -47,8 +47,7 @@ test.describe("Dashboard related test suite", suiteInfo, () => {
       });
 
       const dashboardPage = await DashboardPage.visit(page);
-      const shortcutNames =
-        await dashboardPage.widgets.quickLaunch.getShortcutNames();
+      const shortcutNames = await dashboardPage.widgets.quickLaunch.getShortcutNames();
 
       expect.soft(shortcutNames.length).toEqual(shortcutsNumber);
       expect(shortcutNames).toEqual(expShortcuts);
