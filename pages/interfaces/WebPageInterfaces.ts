@@ -1,13 +1,7 @@
-import type { Page, Locator } from "@playwright/test";
-import type { NavigationSection } from "../sections/Navigation.section";
+import type { Page } from "@playwright/test";
 
 export interface WebPageStaticInterface<T> {
-  readonly PAGE_PATH: string;
+  readonly PAGE_PATH: `/web/index.php/${string}`;
   visit(page: Page): Promise<T>;
   getPage(page: Page): T;
-}
-
-export interface WebPageInterface {
-  pageHeader: Locator;
-  get navigation(): NavigationSection;
 }

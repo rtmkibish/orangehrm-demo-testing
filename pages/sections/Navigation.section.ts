@@ -1,10 +1,7 @@
 import type { Locator, Page } from "@playwright/test";
-import type {
-  WebPageInterface,
-  WebPageStaticInterface,
-} from "../interfaces/WebPageInterfaces";
-import { AdminUserManagement } from "../admin/AdminUserManagement.page";
-import { DashboardPage } from "../DashboardPage.page";
+import type { WebPageStaticInterface } from "../interfaces/WebPageInterfaces";
+import type { AdminUserManagement } from "../admin/AdminUserManagement.page";
+import type { DashboardPage } from "../DashboardPage.page";
 
 type PageCreateConfig<T> = {
   locator: Locator;
@@ -69,6 +66,9 @@ export class NavigationSection {
   }
 
   async goto<K extends keyof PagesTypes>(pageName: K): Promise<PagesTypes[K]> {
+    const { AdminUserManagement } = await import("../admin/AdminUserManagement.page"); // Avoiding circular import dependencies 
+    const { DashboardPage } = await import("../DashboardPage.page");
+
     const pagesMap: PagesMap = {
       adminPage: {
         locator: this.adminLink,

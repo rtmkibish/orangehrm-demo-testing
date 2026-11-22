@@ -1,16 +1,10 @@
-import { NavigationSection } from "../sections/Navigation.section";
-import { TopBarNavigation } from "../sections/TopBarNavigation.section";
-import type { Page, Locator } from "@playwright/test";
+import { AbsModuleWebPage } from "../AbsModuleWebPage";
+import type { Page } from "@playwright/test";
 import type {
-  WebPageInterface,
   WebPageStaticInterface,
 } from "../interfaces/WebPageInterfaces";
 
-export class AdminUserManagement implements WebPageInterface {
-  readonly page: Page;
-  readonly navigation: NavigationSection;
-  readonly pageHeader: Locator;
-  #topBarNavigation?: TopBarNavigation;
+export class AdminUserManagement extends AbsModuleWebPage {
 
   static readonly PAGE_PATH = "/web/index.php/admin/viewSystemUsers";
 
@@ -25,16 +19,7 @@ export class AdminUserManagement implements WebPageInterface {
   }
 
   private constructor(page: Page) {
-    this.page = page;
-    this.navigation = new NavigationSection(page);
-    this.pageHeader = this.page.getByRole("heading", { name: "Admin" });
-  }
-
-  get topBarNavigation() {
-    if (!this.#topBarNavigation) {
-      this.#topBarNavigation = new TopBarNavigation(this.page);
-    }
-    return this.#topBarNavigation;
+    super(page)
   }
 }
 

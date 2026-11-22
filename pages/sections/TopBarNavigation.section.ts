@@ -1,42 +1,35 @@
 import type { Locator, Page } from "@playwright/test";
+import type { WebPageStaticInterface } from "../interfaces/WebPageInterfaces";
+import type { AbsModuleWebPage } from "../AbsModuleWebPage";
 
 export class TopBarNavigation {
   readonly page: Page;
-  readonly activeSection: Locator;
-  private readonly tobBarSections: Locator;
-  #promise = Promise.resolve();
+  readonly activeTab: Locator;
+  private readonly tobBarTabs: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.activeSection = this.page.locator(
+    this.activeTab = this.page.locator(
       ".oxd-topbar-body-nav-tab.--visited",
     );
-    this.tobBarSections = this.page.locator("li.oxd-topbar-body-nav-tab");
+    this.tobBarTabs = this.page.locator("li.oxd-topbar-body-nav-tab");
   }
 
-  #queue(fn: (val: void) => void | PromiseLike<void>) {
-    this.#promise = this.#promise.then(fn);
-    return this;
+  async clickDropdownTab(tabName: string | RegExp) {
+      await this.tobBarTabs.filter({ hasText: tabName }).click();
   }
 
-  clickSection(sectionName: string | RegExp) {
-    return this.#queue(async () => {
-      await this.tobBarSections.filter({ hasText: sectionName }).click();
-    });
+  async clickStaticTab<C extends AbsModuleWebPage>(tabName: string | RegExp, pageObject: WebPageStaticInterface<C>) {
+    await this.tobBarTabs.filter({hasText: tabName}).click();
+    await this.page.waitForLoadState("domcontentloaded");
+    return pageObject.getPage(this.page);
   }
 
-  selectOption(optionName: string | RegExp) {
-    return this.#queue(async () => {
+  async selectOption<C extends AbsModuleWebPage>(optionName: string | RegExp, pageObject: WebPageStaticInterface<C>) {
       const optionItem = this.page.getByRole("menuitem", { name: optionName });
       await optionItem.waitFor({state: "visible"});
       await optionItem.click();
-    });
-  }
-
-  then(
-    res?: (val: void) => void | PromiseLike<void>,
-    rej?: (r: any) => PromiseLike<never>,
-  ) {
-    return this.#promise.then(res, rej);
+      await this.page.waitForLoadState("domcontentloaded");
+      return pageObject.getPage(this.page);
   }
 }
