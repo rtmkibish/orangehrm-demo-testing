@@ -39,7 +39,6 @@ test.describe("Dashboard related test suite", suiteInfo, () => {
     },
   ].forEach(({ summary, mock, shortcutsNumber, expShortcuts }) => {
     test(`${summary}`, async ({ page }) => {
-
       await page.route(DashboardPage.ROUTES.SHORTCUTS, async (route) => {
         await route.fulfill({
           body: JSON.stringify(mock),

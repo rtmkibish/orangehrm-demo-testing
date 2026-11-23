@@ -7,12 +7,12 @@ export default abstract class AbsWidget {
   private readonly widgetTitle: string;
   private readonly widgetSelector = ".orangehrm-dashboard-widget";
   private readonly widgetNameSelector = ".orangehrm-dashboard-widget-name";
-  
+
   constructor(page: Page, widgetTitle: string) {
     this.page = page;
     this.widgetTitle = widgetTitle;
     this.widget = this.page.locator(this.widgetSelector, {
-      hasText: this.widgetTitle
+      hasText: this.widgetTitle,
     });
     this.widgetName = this.widget.locator(this.widgetNameSelector);
   }

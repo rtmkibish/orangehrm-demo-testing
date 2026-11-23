@@ -28,7 +28,7 @@ export class TopBarNavigation {
   selectOption(optionName: string | RegExp) {
     return this.#queue(async () => {
       const optionItem = this.page.getByRole("menuitem", { name: optionName });
-      await optionItem.waitFor({state: "visible"});
+      await optionItem.waitFor({ state: "visible" });
       await optionItem.click();
     });
   }
