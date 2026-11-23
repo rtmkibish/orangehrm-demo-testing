@@ -7,8 +7,10 @@ setup.describe("Storage state setup", () => {
     await page.locator("input[name='username']").fill(process.env.USER_NAME!);
     await page.locator("input[type='password']").fill(process.env.PASSWORD!);
     await page.getByRole("button", { name: "Login" }).click();
-    await expect(page.getByRole("heading", {name: "Dashboard"})).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Dashboard" }),
+    ).toBeVisible();
 
-    await page.context().storageState({path: STORAGE_STATE});
+    await page.context().storageState({ path: STORAGE_STATE });
   });
 });

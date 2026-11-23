@@ -27,7 +27,7 @@ export class TopBarNavigation {
 
   async selectOption<C extends AbsModuleWebPage>(optionName: string | RegExp, pageObject: WebPageStaticInterface<C>) {
       const optionItem = this.page.getByRole("menuitem", { name: optionName });
-      await optionItem.waitFor({state: "visible"});
+      await optionItem.waitFor({ state: "visible" });
       await optionItem.click();
       await this.page.waitForLoadState("domcontentloaded");
       return pageObject.getPage(this.page);
